@@ -1,8 +1,8 @@
 <?php
 
+include("./classes/user.php");
 include("./classes/product.php");
 include("./classes/command.php");
-include("./classes/user.php");
 include_once("./connexion/config.php");
 
 session_start();
@@ -34,20 +34,13 @@ if (!$user || $user['type'] != 'admin') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Supermarché en ligne</title>
     <!-- ======= Styles ====== -->
-    <link rel="stylesheet" href="assets/css/style.css?v=1.2">
+    <link rel="stylesheet" href="assets/css/style.css?v=1.3">
     <style>
         table * {
             text-align: center !important;
             border: 1px solid black;
-
         }
-        .idproduit{
-            display: none; 
-        }
-        td{
-            padding: 15px;
-        }
-    </style>
+    </style> 
 </head>
 
 <body>
@@ -63,7 +56,8 @@ if (!$user || $user['type'] != 'admin') {
                         <span class="title">Supermarché en ligne</span>
                     </a>
                 </li>
-                <li class="hovered">
+
+                <li>
                     <a href="admin.php">
                         <span class="icon">
                             <ion-icon name="home-outline"></ion-icon>
@@ -71,6 +65,7 @@ if (!$user || $user['type'] != 'admin') {
                         <span class="title">Accueil</span>
                     </a>
                 </li>
+
                 <li>
                     <a href="cleint.php">
                         <span class="icon">
@@ -79,7 +74,8 @@ if (!$user || $user['type'] != 'admin') {
                         <span class="title">Les Clients</span>
                     </a>
                 </li>
-                <li>
+
+                <li class="hovered">
                     <a href="command.php">
                         <span class="icon">
                             <ion-icon name="cart-outline"></ion-icon>
@@ -87,6 +83,7 @@ if (!$user || $user['type'] != 'admin') {
                         <span class="title">commande</span>
                     </a>
                 </li>
+
                 <li>
                     <a href="gestionProduit.php">
                         <span class="icon">
@@ -124,7 +121,7 @@ if (!$user || $user['type'] != 'admin') {
                     <div>
                         <div class="numbers">
                             <?php
-                            $total = new Product(null, null, null, null);
+                            $total = new product(null, null, null ,null);
                             $total->affichagetotal($conn);
                             ?>
                         </div>
@@ -138,7 +135,7 @@ if (!$user || $user['type'] != 'admin') {
                     <div>
                         <div class="numbers">
                             <?php
-                            $total = new user(null, null, null);
+                            $total = new user(null, null ,null);
                             $total->affichagetotal($conn);
                             ?>
                         </div>
@@ -152,8 +149,8 @@ if (!$user || $user['type'] != 'admin') {
                     <div>
                         <div class="numbers">
                             <?php
-                            $total = new commande(null, null, null);
-                            $total->affichagetotal($conn);
+                                $total = new commande(null, null, null);
+                                $total->affichagetotal($conn);
                             ?>
                         </div>
                         <div class="cardName">Les Commande</div>
@@ -163,6 +160,7 @@ if (!$user || $user['type'] != 'admin') {
                     </div>
                 </div>
             </div>
+
             <!-- ================ Order Details List ================= -->
             <div class="details">
                 <div class="recentOrders">
@@ -170,30 +168,113 @@ if (!$user || $user['type'] != 'admin') {
                         <h2>Recent Orders</h2>
                         <!-- <a href="#" class="btn">View All</a> -->
                     </div>
+
                     <table>
                         <thead>
                             <tr>
-                                <td class="idproduit">id</td>
+                                <td>ID Commande</td>
                                 <td>Name</td>
-                                <td>description</td>
-                                <td>price</td>
-                                <td style="width: 90px;">quantity</td>
-                                <td class="idproduit">action</td>
+                                <td>Date Commande</td>
+                                <td>Price Total</td>
                             </tr>
                         </thead>
+
                         <tbody>
                             <?php
-                            $p = new Product(null, null, null, null);
+                            $p = new commande (null,null ,null);
                             $p->affichage($conn);
                             ?>
                         </tbody>
                     </table>
                 </div>
+
+                <!-- ================= New Customers ================ -->
+                <!-- <div class="recentCustomers">
+                    <div class="cardHeader">
+                        <h2>Recent Customers</h2>
+                    </div>
+
+                    <table>
+                        <tr>
+                            <td width="60px">
+                                <div class="imgBx"><img src="assets/imgs/customer02.jpg" alt=""></div>
+                            </td>
+                            <td>
+                                <h4>David <br> <span>Italy</span></h4>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td width="60px">
+                                <div class="imgBx"><img src="assets/imgs/customer01.jpg" alt=""></div>
+                            </td>
+                            <td>
+                                <h4>Amit <br> <span>India</span></h4>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td width="60px">
+                                <div class="imgBx"><img src="assets/imgs/customer02.jpg" alt=""></div>
+                            </td>
+                            <td>
+                                <h4>David <br> <span>Italy</span></h4>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td width="60px">
+                                <div class="imgBx"><img src="assets/imgs/customer01.jpg" alt=""></div>
+                            </td>
+                            <td>
+                                <h4>Amit <br> <span>India</span></h4>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td width="60px">
+                                <div class="imgBx"><img src="assets/imgs/customer02.jpg" alt=""></div>
+                            </td>
+                            <td>
+                                <h4>David <br> <span>Italy</span></h4>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td width="60px">
+                                <div class="imgBx"><img src="assets/imgs/customer01.jpg" alt=""></div>
+                            </td>
+                            <td>
+                                <h4>Amit <br> <span>India</span></h4>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td width="60px">
+                                <div class="imgBx"><img src="assets/imgs/customer01.jpg" alt=""></div>
+                            </td>
+                            <td>
+                                <h4>David <br> <span>Italy</span></h4>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td width="60px">
+                                <div class="imgBx"><img src="assets/imgs/customer02.jpg" alt=""></div>
+                            </td>
+                            <td>
+                                <h4>Amit <br> <span>India</span></h4>
+                            </td>
+                        </tr>
+                    </table>
+                </div> -->
             </div>
         </div>
     </div>
+
     <!-- =========== Scripts =========  -->
     <script src="assets/js/main.js?v=1"></script>
+
     <!-- ====== ionicons ======= -->
     <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>

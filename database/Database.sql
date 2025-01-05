@@ -30,7 +30,8 @@ CREATE TABLE product (
 	id_product int AUTO_INCREMENT PRIMARY KEY ,
 	name varchar(50) not null ,
 	description varchar(255) not null ,
-	price float not null,quantity int not null
+	price float not null,
+	quantity int not null
 );
 
 # create table product_management

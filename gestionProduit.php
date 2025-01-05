@@ -1,8 +1,7 @@
 <?php
-
+include("./classes/user.php");
 include("./classes/product.php");
 include("./classes/command.php");
-include("./classes/user.php");
 include_once("./connexion/config.php");
 
 session_start();
@@ -24,6 +23,53 @@ if (!$user || $user['type'] != 'admin') {
     exit();
 }
 
+if (isset($_POST["submit"])) {
+
+    $name = $_POST["name"];
+    $discription = $_POST["description"];
+    $price = $_POST["price"];
+    $quantity = $_POST["quantity"];
+
+    $aj = new Product($name, $discription, $price, $quantity);
+    $aj->ajouterProduit($conn);
+    header("location:gestionProduit.php");
+}
+
+if (isset($_GET["Edit"])) {
+    $id = $_GET["Edit"];
+    $query = "SELECT * FROM product WHERE id_product = :id";
+    $stmt = $conn->prepare($query);
+    $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+    $stmt->execute();
+    $product = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    $name = $product["name"];
+    $description = $product["description"];
+    $price = $product["price"];
+    $quantity = $product["quantity"];
+}
+
+if (isset($_POST["Edit"])) {
+    $id = $_GET["Edit"];
+    $name = $_POST["name"];
+    $discription = $_POST["description"];
+    $price = $_POST["price"];
+    $quantity = $_POST["quantity"];
+
+    $edit = new Product($name, $discription, $price, $quantity);
+    $edit->editProduit($conn, $id);
+    header("location:gestionProduit.php");
+}
+
+if (isset($_GET["Delet"])) {
+    $id = $_GET["Delet"];
+    $Delet = new Product(null, null, null, null);
+    $Delet->deletProduit($conn, $id);
+}
+
+if (isset($_POST["reset"])) {
+    header("location:gestionProduit.php");
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -34,20 +80,8 @@ if (!$user || $user['type'] != 'admin') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Supermarché en ligne</title>
     <!-- ======= Styles ====== -->
-    <link rel="stylesheet" href="assets/css/style.css?v=1.2">
-    <style>
-        table * {
-            text-align: center !important;
-            border: 1px solid black;
-
-        }
-        .idproduit{
-            display: none; 
-        }
-        td{
-            padding: 15px;
-        }
-    </style>
+    <link rel="stylesheet" href="assets/css/style.css?v=1.4">
+    <link rel="stylesheet" href="assets/css/styleProduct.css?v=1.4">
 </head>
 
 <body>
@@ -63,7 +97,8 @@ if (!$user || $user['type'] != 'admin') {
                         <span class="title">Supermarché en ligne</span>
                     </a>
                 </li>
-                <li class="hovered">
+
+                <li>
                     <a href="admin.php">
                         <span class="icon">
                             <ion-icon name="home-outline"></ion-icon>
@@ -71,6 +106,7 @@ if (!$user || $user['type'] != 'admin') {
                         <span class="title">Accueil</span>
                     </a>
                 </li>
+
                 <li>
                     <a href="cleint.php">
                         <span class="icon">
@@ -79,6 +115,7 @@ if (!$user || $user['type'] != 'admin') {
                         <span class="title">Les Clients</span>
                     </a>
                 </li>
+
                 <li>
                     <a href="command.php">
                         <span class="icon">
@@ -87,8 +124,9 @@ if (!$user || $user['type'] != 'admin') {
                         <span class="title">commande</span>
                     </a>
                 </li>
-                <li>
-                    <a href="gestionProduit.php">
+
+                <li class="hovered">
+                    <a href="#">
                         <span class="icon">
                             <ion-icon name="cube-outline"></ion-icon>
                         </span>
@@ -124,7 +162,7 @@ if (!$user || $user['type'] != 'admin') {
                     <div>
                         <div class="numbers">
                             <?php
-                            $total = new Product(null, null, null, null);
+                            $total = new product(null, null, null, null);
                             $total->affichagetotal($conn);
                             ?>
                         </div>
@@ -163,22 +201,60 @@ if (!$user || $user['type'] != 'admin') {
                     </div>
                 </div>
             </div>
+
             <!-- ================ Order Details List ================= -->
             <div class="details">
+                <form action="" method="post">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="name">Product Name:</label>
+                            <!-- استخدام المتغيرات التي خزنت فيها البيانات لملء الحقول -->
+                            <input type="text" id="name" name="name"
+                                value="<?php echo isset($name) ? htmlspecialchars($name) : ''; ?>" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="description">Description:</label>
+                            <input type="text" id="description" name="description"
+                                value="<?php echo isset($description) ? htmlspecialchars($description) : ''; ?>"
+                                required>
+                        </div>
+                        <div class="form-group">
+                            <label for="price">Price (DH):</label>
+                            <input type="number" id="price" name="price" step="any"
+                                value="<?php echo isset($price) ? htmlspecialchars($price) : ''; ?>" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="quantity">Quantity:</label>
+                            <input type="number" id="quantity" name="quantity" min="1"
+                                value="<?php echo isset($quantity) ? htmlspecialchars($quantity) : ''; ?>" required>
+                        </div>
+                        <div class="form-group">
+                            <?php
+                            if (isset($_GET['Edit'])) {
+                                echo '<input type="submit" name="Edit" value="Edit Order" class="btn">';
+                            } else {
+                                echo '<input type="submit" name="submit" value="Submit Order" class="btn">';
+                            }
+                            ?>
+                        </div>
+                    </div>
+                </form>
+                <form action="" method="post">
+                    <input type="submit" value="Reset" name="reset">
+                </form>
                 <div class="recentOrders">
                     <div class="cardHeader">
                         <h2>Recent Orders</h2>
-                        <!-- <a href="#" class="btn">View All</a> -->
                     </div>
                     <table>
                         <thead>
                             <tr>
-                                <td class="idproduit">id</td>
+                                <td class="idp">id</td>
                                 <td>Name</td>
                                 <td>description</td>
                                 <td>price</td>
                                 <td style="width: 90px;">quantity</td>
-                                <td class="idproduit">action</td>
+                                <td style="width: 100px;height: 40px;">action</td>
                             </tr>
                         </thead>
                         <tbody>
@@ -192,8 +268,10 @@ if (!$user || $user['type'] != 'admin') {
             </div>
         </div>
     </div>
+
     <!-- =========== Scripts =========  -->
     <script src="assets/js/main.js?v=1"></script>
+
     <!-- ====== ionicons ======= -->
     <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>

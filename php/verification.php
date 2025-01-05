@@ -81,7 +81,7 @@ if (isset($_POST["login"])) {
 
     if ($stmt->execute()) {
         $_SESSION['user_email'] = $email;
-        header("Location: cleint.php");
+        header("Location: ../cleint.php");
         exit();
     } else {
         header("location:../login.php?msg=registration_failed");
