@@ -4,7 +4,7 @@ include("./classes/command.php");
 include("./classes/user.php");
 include_once("./connexion/config.php");
 
-session_start();
+// session_start();
 
 if (!isset($_SESSION['user_email'])) {
 
@@ -153,7 +153,7 @@ if (isset($_GET["idEdit"])) {
                     <div>
                         <div class="numbers">
                             <?php
-                            $total = new product(null, null, null, null);
+                            $total = new product(null, null, null, null, null);
                             $total->affichagetotal($conn);
                             ?>
                         </div>

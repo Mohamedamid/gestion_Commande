@@ -14,7 +14,7 @@ if (isset($_POST["login"])) {
 
     $password = $_POST["password"];
 
-    $sql = "SELECT email, password, type FROM users WHERE email = :email";
+    $sql = "SELECT email, password, type FROM users WHERE email = :email and status ='active'";
     $stmt = $conn->prepare($sql);
     $stmt->execute([':email' => $email]);
 
@@ -29,7 +29,7 @@ if (isset($_POST["login"])) {
             if ($user['type'] == 'admin') {
                 header("Location: ../admin.php");
             } elseif ($user['type'] == 'cleint') {
-                header("Location: ../cleint.php");
+                header("Location: ../index.php");
             } else {
                 header("Location: ../login.php?error=unknown_role");
             }
@@ -81,7 +81,7 @@ if (isset($_POST["login"])) {
 
     if ($stmt->execute()) {
         $_SESSION['user_email'] = $email;
-        header("Location: ../cleint.php");
+        header("Location: ../index.php");
         exit();
     } else {
         header("location:../login.php?msg=registration_failed");

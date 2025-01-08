@@ -4,7 +4,7 @@ include("./classes/product.php");
 include("./classes/command.php");
 include_once("./connexion/config.php");
 
-session_start();
+// session_start();
 
 if (!isset($_SESSION['user_email'])) {
     header("Location: login.php");
@@ -29,8 +29,16 @@ if (isset($_POST["submit"])) {
     $discription = $_POST["description"];
     $price = $_POST["price"];
     $quantity = $_POST["quantity"];
+    $image = $_FILES["image"]["tmp_name"];
 
-    $aj = new Product($name, $discription, $price, $quantity);
+    // if($_FILES["image"]["tmp_name"]){
+    //     die ('image valide');
+    // }else{
+    //     die("error");
+    // }
+    $img = file_get_contents($image);
+
+    $aj = new Product($name, $discription, $price, $quantity, $img);
     $aj->ajouterProduit($conn);
     header("location:gestionProduit.php");
 }
@@ -55,15 +63,18 @@ if (isset($_POST["Edit"])) {
     $discription = $_POST["description"];
     $price = $_POST["price"];
     $quantity = $_POST["quantity"];
+    $image = $_FILES["image"]["tmp_name"];
 
-    $edit = new Product($name, $discription, $price, $quantity);
+    $img = file_get_contents($image);
+
+    $edit = new Product($name, $discription, $price, $quantity ,$img);
     $edit->editProduit($conn, $id);
     header("location:gestionProduit.php");
 }
 
 if (isset($_GET["Delet"])) {
     $id = $_GET["Delet"];
-    $Delet = new Product(null, null, null, null);
+    $Delet = new Product(null, null, null, null ,null);
     $Delet->deletProduit($conn, $id);
 }
 
@@ -162,7 +173,7 @@ if (isset($_POST["reset"])) {
                     <div>
                         <div class="numbers">
                             <?php
-                            $total = new product(null, null, null, null);
+                            $total = new product(null, null, null, null, null);
                             $total->affichagetotal($conn);
                             ?>
                         </div>
@@ -204,13 +215,16 @@ if (isset($_POST["reset"])) {
 
             <!-- ================ Order Details List ================= -->
             <div class="details">
-                <form action="" method="post">
+                <form action="" method="post" enctype="multipart/form-data">
                     <div class="form-grid">
                         <div class="form-group">
                             <label for="name">Product Name:</label>
-                            <!-- استخدام المتغيرات التي خزنت فيها البيانات لملء الحقول -->
                             <input type="text" id="name" name="name"
                                 value="<?php echo isset($name) ? htmlspecialchars($name) : ''; ?>" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="image">Image:</label>
+                            <input type="file" id="name" name="image" required>
                         </div>
                         <div class="form-group">
                             <label for="description">Description:</label>
@@ -251,6 +265,7 @@ if (isset($_POST["reset"])) {
                             <tr>
                                 <td class="idp">id</td>
                                 <td>Name</td>
+                                <td>image</td>
                                 <td>description</td>
                                 <td>price</td>
                                 <td style="width: 90px;">quantity</td>
@@ -259,7 +274,7 @@ if (isset($_POST["reset"])) {
                         </thead>
                         <tbody>
                             <?php
-                            $p = new Product(null, null, null, null);
+                            $p = new Product(null, null, null, null, null);
                             $p->affichage($conn);
                             ?>
                         </tbody>

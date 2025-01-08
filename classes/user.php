@@ -29,8 +29,8 @@ class user
         $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($users as $user) {
             echo '<tr>';
-            echo '<td>' . htmlspecialchars($user['name']) . '</td>';
-            echo '<td>' . htmlspecialchars($user['email']) . '</td>';
+            echo '<td>' . $user['name'] . '</td>';
+            echo '<td>' . $user['email'] . '</td>';
             if ($user['status'] == 'active') {
                 echo '<td>
                     <a href="cleint.php?idEdit=' . $user['id'] . '&status=disactive" class="status-link disactive-link">Disactive</a>

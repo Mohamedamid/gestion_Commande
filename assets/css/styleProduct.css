@@ -41,7 +41,7 @@ td{
 
 .form-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(5, 1fr);
     gap: 15px;
 }
 
@@ -58,6 +58,7 @@ label {
 
 input[type="text"],
 input[type="number"],
+input[type="file"],
 .btn {
     padding: 10px;
     font-size: 14px;
@@ -68,6 +69,7 @@ input[type="number"],
 }
 
 input[type="text"]:focus,
+input[type="file"]:focus,
 input[type="number"]:focus {
     border-color: #007BFF;
     outline: none;

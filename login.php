@@ -77,6 +77,7 @@
                 <button type="submit" name="login" class="btn">login</button>
                 <div class="link">
                     <p>Don't have an account?<a href="#" class="signup-link"> sign up</a></p>
+                    <a class="navbar-brand" href="index.php">Supermarché en ligne</a>
                 </div>
                 <?php
                 if (isset($_GET['error'])) {

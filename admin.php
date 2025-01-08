@@ -5,7 +5,7 @@ include("./classes/command.php");
 include("./classes/user.php");
 include_once("./connexion/config.php");
 
-session_start();
+// session_start();
 
 if (!isset($_SESSION['user_email'])) {
     header("Location: login.php");
@@ -124,7 +124,7 @@ if (!$user || $user['type'] != 'admin') {
                     <div>
                         <div class="numbers">
                             <?php
-                            $total = new Product(null, null, null, null);
+                            $total = new Product(null, null, null, null, null);
                             $total->affichagetotal($conn);
                             ?>
                         </div>
@@ -139,7 +139,7 @@ if (!$user || $user['type'] != 'admin') {
                         <div class="numbers">
                             <?php
                             $total = new user(null, null, null);
-                            $total->affichagetotal($conn);
+                            $total->affichagetotal(conn: $conn);
                             ?>
                         </div>
                         <div class="cardName">Les Cleints</div>
@@ -168,13 +168,13 @@ if (!$user || $user['type'] != 'admin') {
                 <div class="recentOrders">
                     <div class="cardHeader">
                         <h2>Recent Orders</h2>
-                        <!-- <a href="#" class="btn">View All</a> -->
                     </div>
                     <table>
                         <thead>
                             <tr>
                                 <td class="idproduit">id</td>
                                 <td>Name</td>
+                                <td>image</td>
                                 <td>description</td>
                                 <td>price</td>
                                 <td style="width: 90px;">quantity</td>
@@ -183,7 +183,7 @@ if (!$user || $user['type'] != 'admin') {
                         </thead>
                         <tbody>
                             <?php
-                            $p = new Product(null, null, null, null);
+                            $p = new Product(null, null, null, null, null);
                             $p->affichage($conn);
                             ?>
                         </tbody>
